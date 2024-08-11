@@ -10,8 +10,10 @@ export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
 
   @Query(() => [TaskModel], { nullable: 'items' })
-  async getTasks(): Promise<Task[]> {
-    return await this.taskService.getTasks();
+  async getTasks(
+    @Args('userId', { type: () => Int }) userId: number,
+  ): Promise<Task[]> {
+    return await this.taskService.getTasks(userId);
   }
 
   @Mutation(() => TaskModel)
@@ -30,6 +32,6 @@ export class TaskResolver {
 
   @Mutation(() => TaskModel)
   async deleteTask(@Args('id', { type: () => Int }) id: number): Promise<Task> {
-    return await this.deleteTask(id);
+    return await this.taskService.deleteTask(id);
   }
 }
