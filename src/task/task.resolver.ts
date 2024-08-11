@@ -1,22 +1,19 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TaskService } from './task.service';
 import { Task } from './model/task.model';
+import { CreateTaskInput } from './dto/createTask.input';
 
 @Resolver()
 export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
 
   @Query(() => [Task], { nullable: 'items' })
-  getTasks() {
+  getTasks(): Task[] {
     return this.taskService.getTasks();
   }
 
   @Mutation(() => Task)
-  createTask(
-    @Args('name') name: string,
-    @Args('dueDate') dueDate: string,
-    @Args('description', { nullable: true }) describe: string,
-  ): Task {
-    return this.taskService.createTask(name, dueDate, describe);
+  createTask(@Args('createTaskInput') createTaskInput: CreateTaskInput): Task {
+    return this.taskService.createTask(createTaskInput);
   }
 }
