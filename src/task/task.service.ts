@@ -25,4 +25,8 @@ export class TaskService {
       data: { name, dueDate, status, description },
     });
   }
+
+  async deleteTask(id: number): Promise<Task> {
+    return this.prismaService.task.delete({ where: { id } });
+  }
 }
