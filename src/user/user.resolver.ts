@@ -1,10 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { User } from '@prisma/client';
+import { UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserInput } from './dto/createUser.input';
-import { User as UserModel } from './model/user.model';
-import { nullable } from 'zod';
+import { User as UserModel } from './models/user.model';
+import { CreateUserInput } from './dto/createUserInput';
 import { GetUserArgs } from './dto/getUser.args';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Resolver()
 export class UserResolver {
@@ -18,7 +19,8 @@ export class UserResolver {
   }
 
   @Query(() => UserModel, { nullable: true })
+  @UseGuards(JwtAuthGuard)
   async getUser(@Args() getUserArgs: GetUserArgs): Promise<User> {
-    return await this.userService.getUser(getUserArgs.email)
+    return await this.userService.getUser(getUserArgs.email);
   }
 }
